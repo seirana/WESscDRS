@@ -9,7 +9,7 @@ The pipeline is compatible with any Linux system and requires only two dependenc
  - Singularity  (as the container engine)
 
 In [Quick Start](#quick-start), you can follow the instructions to install the requirements and run simple samples.
-To know the details of the functions, check the [Documentations](#documentations). Also, there, you can find detailed instructions about the data type and formats that are needed as input for WESscDRS and TheraNet functions.
+To know the details of the functions, check the [Documentations](#documentations). Also, there, you can find detailed instructions about the data type and formats that are needed as input for WESscDRS function.
  
 # Table of contents
 - [Pipeline structure](#pipeline-structure)
@@ -97,7 +97,6 @@ You will find the pipeline code stored in ${HOME}/.nextflow/assets/ikmb/WESscDRS
 
 ## Example workflows
 * Running WESscDRS	
-* Running TheraNet
   
 ### Running WESscDRS	
 In your first run, to download required databases, you can add the --updatemetaphlan flag; in subsequent runs, you can skip the update flag (remove line 6 from the following code; --updatemetaphlan \).
