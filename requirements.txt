@@ -1,0 +1,9 @@
+gdown
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+requests
+anndata
+scanpy
