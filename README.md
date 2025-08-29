@@ -8,8 +8,8 @@ The pipeline is compatible with any Linux system and requires only two dependenc
  - Nextflow (workflow manager)  
  - Singularity  (as the container engine)
 
-In [Quick Start](#quick-start), you can follow the instructions to install the requirements and run simple samples.
-To know the details of the functions, check the [Documentations](#documentations). Also, there, you can find detailed instructions about the data type and formats that are needed as input for WESscDRS function.
+In the [Quick Start](#quick-start) section, you can follow the instructions to install the requirements and run simple samples.
+To learn more about the functions, refer to the [Documentations](#documentations). Additionally, there, you can find detailed instructions on the data type and formats required as input for the WESscDRS function.
  
 # Table of contents
 - [Pipeline structure](#pipeline-structure)
@@ -47,7 +47,7 @@ RAM: At least 32 GB (e.g., WESscDRS may require up to 360 GB).
 ### Pre-configuration
 WESscDRS includes a pre-configured quickstart profile for local testing with the least requirements, as mentioned above.
 
-Note: The quickstart profile is not recommended for real metagenome data analysis usage.
+Note: The quickstart profile is not recommended for real-world metagenome data analysis.
 For large datasets, it is recommended to run the pipeline on a high-performance computing (HPC) system.
 
 ### Custom configuration
@@ -56,11 +56,11 @@ To fully utilize WESscDRS on an HPC or other systems, you must create a custom c
 Available CPU cores and memory.
 Scheduler settings (e.g., local or SLURM).
 Paths for reference databases.
-Please take a look at the installation and configuration documentation for details. ???????
+Please refer to the installation and configuration documentation for more details.
 
 ## Installing dependencies
 ### Step 1: Install Nextflow
-Nextflow requires Bash 3.2 (or later) and Java 17 (or later, up to 24) to be installed. Follow the instructions from [Nextflow installation guidance](https://www.nextflow.io/docs/latest/install.html#install-page) to check requirements and step-by-step installation.
+Nextflow requires Bash 3.2 (or later) and Java 17 (or later, up to 24) to be installed. Follow the instructions from the [Nextflow installation guidance](https://www.nextflow.io/docs/latest/install.html#install-page) to check the requirements and perform a step-by-step installation.
 
 ### Step 2: Install Singularity 
 You can install Singularity via the [Singularity Quickstart Guide](https://docs.sylabs.io/guides/3.9/user-guide/quick_start.html) or
@@ -103,7 +103,7 @@ In your first run, to download required databases, you can add the --updatemetap
 ```bash
 nextflow run ikmb/WESscDRS \
     -profile custom \
-    -c tofu.config \
+    -c WESscDRS.config \
     --reads '*_R{1,2}.fastq.gz' \
     --metaphlan \
     --updatemetaphlan \
@@ -116,4 +116,4 @@ All further documentation about the pipeline can be found in the [docs/](https:/
 * [WESscDRS](https://github.com/seirana/WESscDRS/blob/main/docs/WESscDRS)
 
 # Funding
-The project was funded by the German Research Foundation (DFG) Research Unit ????.
+The project was funded by the German Research Foundation (DFG) as part of the Research Unit ????.
