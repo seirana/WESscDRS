@@ -2,7 +2,7 @@
 WESscDRS is a Nexflow pipeline designed to link scRNA-seq with polygenic disease risk at the single-cell resolution, independent of annotated cell types, and suggest drugs for the disease.  
 
 It provides comprehensive functionalities for:  
- - GE-scDRS Identifying cells exhibiting excess expression across disease-associated genes implicated by Whole Exome Sequencing (WES).  
+ - WESscDRS Identifying cells exhibiting excess expression across disease-associated genes implicated by Whole Exome Sequencing (WES).  
 
 The pipeline is compatible with any Linux system and requires only two dependencies:  
  - Nextflow (workflow manager)  
