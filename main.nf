@@ -44,26 +44,25 @@ process DOWNLOAD_GDRIVE {
     output:
     path "WESscDRS"
 
-    """
+    shell:
+    '''
     set -euo pipefail
 
     # Normalize output directory name for Nextflow
-    if [ "${repo_dir}" != "WESscDRS" ]; then
-      cp -r "${repo_dir}" "WESscDRS"
+    if [ "!{repo_dir}" != "WESscDRS" ]; then
+      cp -r "!{repo_dir}" "WESscDRS"
     fi
 
     cd WESscDRS
-    mkdir -p ${params.gdrive_dest}
+    mkdir -p !{params.gdrive_dest}
 
-    echo "Downloading Google Drive file into ${params.gdrive_dest}/"
+    echo "Downloading Google Drive file into !{params.gdrive_dest}/"
     # gdown handles Drive 'confirm' tokens via --fuzzy
-    gdown --fuzzy "${params.gdrive_url}" -O ${params.gdrive_dest}/
+    gdown --fuzzy "!{params.gdrive_url}" -O !{params.gdrive_dest}/
 
     echo "Downloaded files:"
-    ls -lah ${params.gdrive_dest}
-
-    # leave the updated repo as the process output
-    """
+    ls -lah !{params.gdrive_dest}
+    '''
 }
 
 // --- Process: run bin/run.py inside your Python container ---
