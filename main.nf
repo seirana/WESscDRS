@@ -79,41 +79,39 @@ process RUN_PY {
     output:
     path "${params.outdir}"
 
-    """
+    shell:
+    '''
     set -euo pipefail
-    cd ${repo_dir}
+    cd "!{repo_dir}"
 
     echo "Python version in container:"
-    python --version || python3 --version || true
+    (python --version || python3 --version) || true
 
-    echo "Repo contents:"
-    ls -lah
-    echo "Data directory after GDrive download:"
-    ls -lah data || true
+    echo "Repo contents:"; ls -lah
+    echo "Data directory after GDrive download:"; ls -lah data || true
 
-    # If run.py needs data path, provide it as an env var
-    export DATA_DIR="$(pwd)/data"
+    # Provide data path to the script
+    export DATA_DIR="$PWD/data"
 
     # Run the script
-    (python bin/run.py ${params.run_args}) || (python3 bin/run.py ${params.run_args})
+    (python bin/run.py !{params.run_args}) || (python3 bin/run.py !{params.run_args})
 
-    # Collect outputs into ${params.outdir}
-    mkdir -p "${params.outdir}"
+    # Collect outputs into !{params.outdir}
+    mkdir -p "!{params.outdir}"
 
     # If your script created a 'results' folder, copy it in
     if [ -d results ]; then
-      cp -r results/* "${params.outdir}/" 2>/dev/null || true
+      cp -r results/* "!{params.outdir}/" 2>/dev/null || true
     fi
 
-    # Also copy any files created at top-level that look like outputs
+    # Also copy any top-level files created during this run
     for f in *; do
-      case "$f" in
-        results|${params.outdir}|.git|.github) continue ;;
-      esac
+      case "$f" in results|!{params.outdir}|.git|.github) continue ;; esac
       if [ -f "$f" ]; then
-        cp "$f" "${params.outdir}/" 2>/dev/null || true
+        cp "$f" "!{params.outdir}/" 2>/dev/null || true
       fi
     done
-    """
+    '''
 }
+
 
