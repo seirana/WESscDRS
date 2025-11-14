@@ -90,10 +90,10 @@ Select and install the correct version for your operating system from [here](htt
 ### Downloading WESscDRS
 Use the following command to download or update the pipeline:
 ```bash
-nextflow run . -profile docker
+
 nextflow pull seirana/WESscDRS
 ```
-You will find the pipeline code stored in ${HOME}/.nextflow/assets/ikmb/WESscDRS.
+You will find the pipeline code stored in ${HOME}/.nextflow/assets/seirana/WESscDRS.
 
 ### Downloading input data for GEsxDRS
 
