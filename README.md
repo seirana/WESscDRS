@@ -84,13 +84,13 @@ Nextflow will install it. If there is a problem, check [their page](https://pypi
 * bcftools
 You can install it from [here](https://samtools.github.io/bcftools/howtos/install.html).
 * MAGMA
-Select and install the proper version based on your operating system from [here](https://cncr.nl/research/magma/).
+Select and install the correct version for your operating system from [here](https://cncr.nl/research/magma/).
 
 ## Downloads
 ### Downloading WESscDRS
 Use the following command to download or update the pipeline:
 ```bash
-nextflow pull ikmb/WESscDRS
+nextflow pull seirana/WESscDRS
 ```
 You will find the pipeline code stored in ${HOME}/.nextflow/assets/ikmb/WESscDRS.
 
