@@ -1,20 +1,28 @@
 Bootstrap: docker
 From: python:3.11-slim
 
-%files
-    requirements.txt /opt/requirements.txt
+%help
+    Singularity image for WESscDRS:
+    - Python 3.11
+    - pip
+    - git + curl for downloads (if needed)
 
 %post
-    set -euo pipefail
-    apt-get update && apt-get install -y --no-install-recommends \
-        git curl ca-certificates build-essential pkg-config \
-      && rm -rf /var/lib/apt/lists/*
-    pip install --no-cache-dir -r /opt/requirements.txt
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        git \
+        curl \
+        ca-certificates \
+        build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+    python -m pip install --upgrade pip
 
 %environment
+    export LC_ALL=C
+    export LANG=C.UTF-8
     export PYTHONUNBUFFERED=1
-    export PATH="/usr/local/bin:${PATH}"
 
-%labels
-    Author="Seirana"
-    Purpose="WESscDRS runtime with Python deps + gdown"
+%runscript
+    # Just forward arguments to Python / shell, Nextflow controls the command.
+    exec "$@"
