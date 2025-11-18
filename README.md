@@ -76,6 +76,23 @@ singularity --version
 # Also, make sure you can run an example container
 singularity run library://sylabsed/examples/lolcow
 ```
+or 
+```bash
+# Install SingularityCE from official .deb package
+# This is the cleanest method, easiest, fastest, and fully supported.
+
+# Download installer
+wget https://github.com/sylabs/singularity/releases/download/v4.1.2/singularity-ce_4.1.2-jammy_amd64.deb
+
+# Install it
+sudo apt install ./singularity-ce_4.1.2-jammy_amd64.deb
+
+# Test it
+singularity --version
+
+# Expected:
+# singularity-ce version 4.1.2
+```
 
 ### step 3: Install dependent software for WESscDRS
 GEcsDRS needs some extra software to run:
