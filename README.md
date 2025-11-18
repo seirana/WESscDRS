@@ -90,7 +90,7 @@ Select and install the correct version for your operating system from [here](htt
 ### Downloading WESscDRS
 Use the following command to download or update the pipeline:
 ```bash
-
+nextflow run seirana/WESscDRS -profile singularity
 nextflow pull seirana/WESscDRS
 ```
 You will find the pipeline code stored in ${HOME}/.nextflow/assets/seirana/WESscDRS.
