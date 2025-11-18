@@ -1,101 +1,87 @@
-// --- Process: clone the repo so we get /data and /bin/run.py ---
-process CLONE_REPO {
-    tag "clone ${params.branch}"
-    container 'docker://alpine/git:2.45.2'
-    shell '/bin/sh'
-    debug true
+nextflow.enable.dsl = 2
+
+// URLs and parameters
+params.repo_tar = 'https://github.com/seirana/WESscDRS/archive/refs/heads/main.tar.gz'
+
+// Main workflow
+workflow {
+    // Step 1: download code + data from GitHub into ./WESscDRS
+    wes_dir_ch = DOWNLOAD_WESscDRS()
+
+    // Step 2: install Python dependencies and run run.py
+    RUN_WESscDRS(wes_dir_ch)
+}
+
+/**
+ * DOWNLOAD_WESscDRS
+ * - Downloads the repo tarball from GitHub
+ * - Extracts it into a directory called "WESscDRS"
+ * - Publishes that directory to the project root, so you get ./WESscDRS/bin and ./WESscDRS/data
+ */
+process DOWNLOAD_WESscDRS {
+
+    tag "download WESscDRS"
+
+    // Use the Singularity image as well (optional but neat)
+    container "${baseDir}/wes-scdrs.sif"
+
+    publishDir "${baseDir}", mode: 'copy', overwrite: true
 
     output:
     path "WESscDRS"
 
-    shell:
-    '''
-    set -eu
+    script:
+    """
+    set -e
+
+    # Clean any previous run inside work dir
     rm -rf WESscDRS
-    git clone --depth 1 --branch "!{params.branch}" "!{params.repo_url}" WESscDRS
-    '''
+
+    mkdir -p WESscDRS
+
+    # Download and extract the repo tarball
+    # This will create bin/, data/, requirements.txt, etc., in WESscDRS/
+    curl -L ${params.repo_tar} | tar xz --strip-components=1 -C WESscDRS
+
+    # At this point inside this process work dir we have:
+    #   WESscDRS/bin
+    #   WESscDRS/data
+    #   WESscDRS/requirements.txt
+    #
+    # publishDir will copy "WESscDRS" to ${baseDir}/WESscDRS
+    """
 }
 
-// --- Process: download the Google Drive file into data/ ---
-process DOWNLOAD_GDRIVE {
-    tag "gdrive download"
-    container "${params.container}"
-    shell '/bin/sh'
-    debug true
+/**
+ * RUN_WESscDRS
+ * - Installs Python dependencies from WESscDRS/requirements.txt (user site)
+ * - Runs bin/run.py
+ */
+process RUN_WESscDRS {
 
-    input:
-    path repo_dir
-
-    output:
-    path "WESscDRS"
-
-    shell:
-    '''
-    set -eu
-
-    # Normalize output directory name for Nextflow
-    if [ "!{repo_dir}" != "WESscDRS" ]; then
-      cp -r "!{repo_dir}" "WESscDRS"
-    fi
-
-    cd WESscDRS
-    mkdir -p "!{params.gdrive_dest}"
-
-    echo "Downloading Google Drive file into !{params.gdrive_dest}/"
-    gdown --fuzzy "!{params.gdrive_url}" -O "!{params.gdrive_dest}/"
-
-    echo "Downloaded files:"
-    ls -lah "!{params.gdrive_dest}"
-    '''
-}
-
-// --- Process: run bin/run.py inside your Python container ---
-process RUN_PY {
     tag "run.py"
-    container "${params.container}"
-    shell '/bin/sh'
-    debug true
 
-    publishDir "${params.outdir}", mode: 'copy', overwrite: true
+    container "${baseDir}/wes-scdrs.sif"
 
     input:
-    path repo_dir
+    path wes_dir
 
-    output:
-    path "${params.outdir}"
+    // Optional: produce a results folder under WESscDRS/results
+    publishDir "${baseDir}/WESscDRS/results", mode: 'copy', overwrite: true
 
-    shell:
-    '''
-    set -eu
-    cd "!{repo_dir}"
+    script:
+    """
+    set -e
 
-    echo "Python version in container:"
-    (python --version || python3 --version) || true
+    echo "Using WESscDRS directory: ${wes_dir}"
 
-    echo "Repo contents:"; ls -lah
-    echo "Data directory after GDrive download:"; ls -lah data || true
+    cd ${wes_dir}
 
-    # Provide data path to the script
-    DATA_DIR="$PWD/data"
-    export DATA_DIR
+    # Install Python deps into user site-packages (in \$HOME/.local)
+    # This avoids writing into the read-only container filesystem.
+    python -m pip install --user --no-cache-dir -r requirements.txt
 
-    # Run the script with any extra args
-    (python bin/run.py !{params.run_args}) || (python3 bin/run.py !{params.run_args})
-
-    # Collect outputs into !{params.outdir}
-    mkdir -p "!{params.outdir}"
-
-    # If your script created a 'results' folder, copy it in
-    if [ -d results ]; then
-      cp -r results/* "!{params.outdir}/" 2>/dev/null || true
-    fi
-
-    # Also copy any top-level files created during this run (except known dirs)
-    for f in *; do
-      case "$f" in results|!{params.outdir}|.git|.github) continue ;; esac
-      if [ -f "$f" ]; then
-        cp "$f" "!{params.outdir}/" 2>/dev/null || true
-      fi
-    done
-    '''
+    # Run the main script
+    python bin/run.py
+    """
 }
