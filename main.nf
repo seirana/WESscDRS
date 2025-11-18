@@ -1,53 +1,27 @@
-nextflow.enable.dsl = 2
-
-// ---------------- Parameters (override at runtime if needed) ----------------
-params.repo_url     = params.repo_url     ?: 'https://github.com/seirana/WESscDRS.git'
-params.branch       = params.branch       ?: 'main'
-params.run_args     = params.run_args     ?: ''           // e.g. '--foo 123 --bar x'
-params.outdir       = params.outdir       ?: 'results'    // collected outputs
-
-// Default Singularity container: point to a local SIF you built (recommended)
-//   apptainer build containers/wes-scdrs.sif wes-scdrs.def
-// You can override with: --container 'docker://python:3.11-slim' (must include deps)
-params.container    = params.container    ?: "${projectDir}/containers/wes-scdrs.sif"
-
-// Google Drive file (your provided link by default)
-params.gdrive_url   = params.gdrive_url   ?: 'https://drive.google.com/file/d/1st4mJF1CORXlRX6mNQDDgz7VKn_IdzAt/view?usp=drive_link'
-params.gdrive_dest  = params.gdrive_dest  ?: 'data'       // where to save inside the repo
-
-// ---------------- Workflow ---------------------------------------------------
-workflow {
-    repo_ch        = CLONE_REPO()
-    with_drive_ch  = DOWNLOAD_GDRIVE(repo_ch)
-    RUN_PY(with_drive_ch)
-}
-
-// ---------------- Processes --------------------------------------------------
-
-// Clone the repo to get /data and /bin/run.py
+// --- Process: clone the repo so we get /data and /bin/run.py ---
 process CLONE_REPO {
     tag "clone ${params.branch}"
-
-    // Use a pullable container reference for Apptainer
     container 'docker://alpine/git:2.45.2'
-    echo true
+    shell '/bin/sh'
+    debug true
 
     output:
     path "WESscDRS"
 
     shell:
     '''
-    set -euo pipefail
+    set -eu
     rm -rf WESscDRS
     git clone --depth 1 --branch "!{params.branch}" "!{params.repo_url}" WESscDRS
     '''
 }
 
-// Download the Google Drive file into data/
+// --- Process: download the Google Drive file into data/ ---
 process DOWNLOAD_GDRIVE {
     tag "gdrive download"
     container "${params.container}"
-    echo true
+    shell '/bin/sh'
+    debug true
 
     input:
     path repo_dir
@@ -57,7 +31,7 @@ process DOWNLOAD_GDRIVE {
 
     shell:
     '''
-    set -euo pipefail
+    set -eu
 
     # Normalize output directory name for Nextflow
     if [ "!{repo_dir}" != "WESscDRS" ]; then
@@ -68,7 +42,6 @@ process DOWNLOAD_GDRIVE {
     mkdir -p "!{params.gdrive_dest}"
 
     echo "Downloading Google Drive file into !{params.gdrive_dest}/"
-    # gdown handles Drive 'confirm' tokens via --fuzzy
     gdown --fuzzy "!{params.gdrive_url}" -O "!{params.gdrive_dest}/"
 
     echo "Downloaded files:"
@@ -76,11 +49,12 @@ process DOWNLOAD_GDRIVE {
     '''
 }
 
-// Run bin/run.py inside your Python container
+// --- Process: run bin/run.py inside your Python container ---
 process RUN_PY {
     tag "run.py"
     container "${params.container}"
-    echo true
+    shell '/bin/sh'
+    debug true
 
     publishDir "${params.outdir}", mode: 'copy', overwrite: true
 
@@ -92,7 +66,7 @@ process RUN_PY {
 
     shell:
     '''
-    set -euo pipefail
+    set -eu
     cd "!{repo_dir}"
 
     echo "Python version in container:"
@@ -102,7 +76,8 @@ process RUN_PY {
     echo "Data directory after GDrive download:"; ls -lah data || true
 
     # Provide data path to the script
-    export DATA_DIR="$PWD/data"
+    DATA_DIR="$PWD/data"
+    export DATA_DIR
 
     # Run the script with any extra args
     (python bin/run.py !{params.run_args}) || (python3 bin/run.py !{params.run_args})
