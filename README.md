@@ -79,6 +79,7 @@ This installation must be done manually.
 
 Select and install the correct version for your operating system and desired genome reference from [here](https://cncr.nl/research/magma/).
 
+This command installs Python libraries, scDRS, and bcftools
 ```bash
 cd /home/WESscDRS
 bash setup_dependencies.sh
