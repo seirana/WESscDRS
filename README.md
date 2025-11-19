@@ -76,7 +76,6 @@ mkdir -p WESscDRS
 cd /home/seirana/Desktop/WESscDRS
 git clone https://github.com/seirana/WESscDRS.git
 ```
-#.............................................................................
 3. If you get an error like “destination path 'WESscDRS' already exists”.
 ```bash
 cd /home/seirana/Desktop/WESscDRS
