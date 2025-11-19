@@ -66,19 +66,19 @@ Select and install the correct version for your operating system from [here](htt
 All the codes and needed files for the sample file will be downloaded in this step.
 
 1. Make a folder where you want to keep data and files for the WESscDRS project.
-For example, make a folder named WESscDRS in this place: /home/seirana/Desktop.
+For example, make a folder named WESscDRS in the home directory.
 ```bash
-cd /home/seirana/Desktop
+cd /home
 mkdir -p WESscDRS
 ```
 2. Clone the GitHub repo into that folder
 ```bash
-cd /home/seirana/Desktop/WESscDRS
+cd /home/WESscDRS
 git clone https://github.com/seirana/WESscDRS.git
 ```
 3. If you get an error like “destination path 'WESscDRS' already exists”.
 ```bash
-cd /home/seirana/Desktop/WESscDRS
+cd /home/WESscDRS
 git pull --rebase origin main
 ```
  
