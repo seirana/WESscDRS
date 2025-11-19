@@ -17,7 +17,7 @@ To learn more about the functions, refer to the [Documentations](#documentations
     	- [Pre-configuration](#pre-configuration)
     	- [Custom configuration](#custom-configuration)
 	- [Installing dependencies](#installing-dependencies)
-		- [Step 1: Install Nextflow](#step-1-Install-nextflow)
+		- [Step 1: Install pipeline](#step-1-Install-pipeline)
 		- [Step 2: Install Singularity ](#step-2-Install-singularity)
     	- [step 3: Install dependent software for WESscDRS](#step-3-install-dependent-software-for-WESscDRS)
      - [Downloads](#downloads)
@@ -30,7 +30,7 @@ To learn more about the functions, refer to the [Documentations](#documentations
   
 # Pipeline Structure
 After installing Netwflow and Singularity, you no longer need to install additional software.
-Nextflow automatically downloads all necessary containers and tools.
+pipeline automatically downloads all necessary containers and tools.
 
 ![Image Alt Text](https://github.com/seirana/WESscDRS/blob/main/Images/Pipeline%20Structure.png)
 
@@ -54,9 +54,9 @@ Please refer to the installation and configuration documentation for more detail
 ## Installing dependencies
 WESscDRS needs some extra software to run:
 ### step 1: Install scDRS
-Nextflow will install it. If there is a problem, check [their page](https://pypi.org/project/scdrs/).
-### step 2: Install bcftools
-Nextflow will install it. If there is a problem, check [here](https://samtools.github.io/bcftools/howtos/install.html).
+pipeline will install it. If there is a problem, check [their page](https://pypi.org/project/scdrs/).
+### step 2: Install the bcftools
+pipeline will install it. If there is a problem, check [here](https://samtools.github.io/bcftools/howtos/install.html).
 ### step 3: Install MAGMA
 This installation must be done manually.
 
@@ -85,7 +85,7 @@ git pull --rebase origin main
  
 ### Running WESscDRS	
 ```bash
-nextflow run ikmb/WESscDRS \
+pipeline run ikmb/WESscDRS \
     -profile custom \
     -c WESscDRS.config \
     --reads '*_R{1,2}.fastq.gz' \
