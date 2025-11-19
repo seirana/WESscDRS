@@ -3,7 +3,7 @@
 """
 @author: Seirana
 
-This function runs the scDRS function over the desired traits and tissues.
+This function runs scDRS across the desired traits and tissues.
 
 input:
     ./scDRS/data/tissues.csv
