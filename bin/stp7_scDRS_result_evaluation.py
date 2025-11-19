@@ -6,7 +6,7 @@
 
 This program:
     1. calculates the variables of log-threshold formula -> threshold = a + b / log10(cell_count)
-    2.reads the result of scDRS analyses and reports associated cell-types
+    2. reads the result of scDRS analyses and reports associated cell-types
 
 input:
     min_cell_count = 150
