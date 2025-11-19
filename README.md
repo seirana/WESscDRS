@@ -29,9 +29,6 @@ To learn more about the functions, refer to the [Documentations](#documentations
 - [Funding](#funding)
   
 # Pipeline Structure
-After installing Netwflow and Singularity, you no longer need to install additional software.
-pipeline automatically downloads all necessary containers and tools.
-
 ![Image Alt Text](https://github.com/seirana/WESscDRS/blob/main/Images/Pipeline%20Structure.png)
 
 # Quick Start
@@ -51,19 +48,8 @@ Scheduler settings (e.g., local or SLURM).
 Paths for reference databases.
 Please refer to the installation and configuration documentation for more details.
 
-## Installing dependencies
-WESscDRS needs some extra software to run:
-### step 1: Install scDRS
-pipeline will install it. If there is a problem, check [their page](https://pypi.org/project/scdrs/).
-### step 2: Install the bcftools
-pipeline will install it. If there is a problem, check [here](https://samtools.github.io/bcftools/howtos/install.html).
-### step 3: Install MAGMA
-This installation must be done manually.
-
-Select and install the correct version for your operating system and desired genome reference from [here](https://cncr.nl/research/magma/).
-
 ## Downloads
-### Clone WESscDRS 
+### Clone WESscDRS  and install 
 All the codes and needed files for the sample file will be downloaded in this step.
 
 1. Make a folder where you want to keep data and files for the WESscDRS project.
@@ -82,7 +68,22 @@ git clone https://github.com/seirana/WESscDRS.git
 cd /home/WESscDRS
 git pull --rebase origin main
 ```
- 
+## Installing dependencies
+WESscDRS needs some extra software to run:
+### step 1: Install scDRS
+Pipeline will install it. If there is a problem, check [their page](https://pypi.org/project/scdrs/).
+### step 2: Install the bcftools
+Pipeline will install it. If there is a problem, check [here](https://samtools.github.io/bcftools/howtos/install.html).
+### step 3: Install MAGMA
+This installation must be done manually.
+
+Select and install the correct version for your operating system and desired genome reference from [here](https://cncr.nl/research/magma/).
+
+```bash
+cd /home/WESscDRS
+bash setup_dependencies.sh
+```
+
 ### Running WESscDRS	
 ```bash
 pipeline run ikmb/WESscDRS \
