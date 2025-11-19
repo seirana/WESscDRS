@@ -79,22 +79,17 @@ This installation must be done manually.
 
 Select and install the correct version for your operating system and desired genome reference from [here](https://cncr.nl/research/magma/).
 
-#### This command installs Python libraries, scDRS, and bcftools
+#### This command installs Python libraries, scDRS, and bcftools.
 ```bash
 cd /home/WESscDRS
 bash setup_dependencies.sh
 ```
 
-### Running WESscDRS	
+### Running WESscDRS
+The pipeline will run the code smoothly.
 ```bash
-pipeline run ikmb/WESscDRS \
-    -profile custom \
-    -c WESscDRS.config \
-    --reads '*_R{1,2}.fastq.gz' \
-    --metaphlan \
-    --updatemetaphlan \
-    --metaphlan_db '/path/to/store/metaphlan/db' \
-    --outdir results
+cd /home/WESscDRS
+bash all_run.sh
 ```
 	
 # Documentations 
