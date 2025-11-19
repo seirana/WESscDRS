@@ -91,7 +91,7 @@ bash setup_dependencies.sh
 The pipeline will run the code smoothly.
 ```bash
 cd /home/WESscDRS
-bash all_run.sh
+bash WESscDRS_run.sh
 ```
 	
 # Documentations 
