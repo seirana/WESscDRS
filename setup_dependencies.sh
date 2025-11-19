@@ -54,6 +54,5 @@ cd ../../
 echo
 echo "==========================================="
 echo "   ONE-TIME SETUP COMPLETED ✅"
-echo "   You can now run: bash run_pipeline.sh"
 echo "==========================================="
 
