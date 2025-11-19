@@ -84,10 +84,10 @@ Select and install the correct version for your operating system and desired gen
 cd /home/WESscDRS
 bash setup_dependencies.sh
 ```
-### Input data
+## Input data
 
 
-### Running WESscDRS
+## Running WESscDRS
 The pipeline will run the code smoothly.
 ```bash
 cd /home/WESscDRS
