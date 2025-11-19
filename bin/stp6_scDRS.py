@@ -8,7 +8,7 @@ This function runs the scDRS function over the desired traits and tissues.
 input:
     ./scDRS/data/tissues.csv
     ./scDRS/data/traits.csv
-    ../scDRS/data/sinlge cell datasets/{tissue}.h5ad
+    ../scDRS/data/single cell datasets/{tissue}.h5ad
     ./scDRS/output/geneset/{trait}_geneset.gs
     
 output:
@@ -21,10 +21,7 @@ output:
 """
 
 from IPython import get_ipython
-get_ipython().run_line_magic('reset','-sf')
-
 import os
-os.system('clear')
 
 import sys
 sys.path.append('./scDRS/code/')
