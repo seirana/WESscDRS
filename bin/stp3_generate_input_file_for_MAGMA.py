@@ -3,7 +3,7 @@
 """
 @author: seirana
 
-This program gets generates files needed for MAGMA gene-based test
+This program generates files needed for the MAGMA gene-based test.
 
 input:
     ./scDRS/output/variants_with_rsID_PSC_WES_SAIGE.vcf 
@@ -14,11 +14,7 @@ output:
 """
 
 from IPython import get_ipython
-get_ipython().run_line_magic('reset','-sf')
-
 import os
-os.system('clear')
-
 import read_write as rw
 import pandas as pd
 
