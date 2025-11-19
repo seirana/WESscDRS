@@ -3,7 +3,7 @@
 """
 @author: Seirana
 
-This program generates a file which is in the desired format of bcftools funtion
+This program generates a file in the desired format for the bcftools function.
 
 input: 
     './scDRS/data/SAIGE_single_marker_test.txt'
@@ -12,10 +12,7 @@ output:
 """
 
 from IPython import get_ipython
-get_ipython().run_line_magic('reset','-sf')
-
 import os
-os.system('clear')
 
 import sys
 sys.path.append('./scDRS/code/')
