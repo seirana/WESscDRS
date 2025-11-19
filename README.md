@@ -1,13 +1,9 @@
 !! UNDER CONSTRUCTION!
 # WESscDRS
-WESscDRS is a Nexflow pipeline designed to link scRNA-seq with polygenic disease risk at the single-cell resolution, independent of annotated cell types, and suggest drugs for the disease.  
+WESscDRS is designed to link scRNA-seq with polygenic disease risk at the single-cell resolution, independent of annotated cell types, and suggest drugs for the disease.  
 
 It provides comprehensive functionalities for:  
  - WESscDRS Identifying cells exhibiting excess expression across disease-associated genes implicated by Whole Exome Sequencing (WES).  
-
-The pipeline is compatible with any Linux system and requires only two dependencies:  
- - Nextflow (workflow manager)  
- - Singularity  (as the container engine)
 
 In the [Quick Start](#quick-start) section, you can follow the instructions to install the requirements and run simple samples.
 To learn more about the functions, refer to the [Documentations](#documentations). Additionally, there, you can find detailed instructions on the data type and formats required as input for the WESscDRS function.
@@ -45,11 +41,7 @@ WESscDRS requires significant computational resources. Ensure your system meets 
 CPU: At least 16 cores.    
 RAM: At least 32 GB (e.g., WESscDRS may require up to 360 GB).
 
-### Pre-configuration
-WESscDRS includes a pre-configured quickstart profile for local testing with the least requirements, as mentioned above.
-
-Note: The quickstart profile is not recommended for real-world metagenome data analysis.
-For large datasets, it is recommended to run the pipeline on a high-performance computing (HPC) system.
+Note: For large datasets, it is recommended to run the pipeline on a high-performance computing (HPC) system.
 
 ### Custom configuration
 To fully utilize WESscDRS on an HPC or other systems, you must create a custom configuration file specifying:
@@ -60,65 +52,38 @@ Paths for reference databases.
 Please refer to the installation and configuration documentation for more details.
 
 ## Installing dependencies
-### Step 1: Install Nextflow
-Nextflow requires Bash 3.2 (or later) and Java 17 (or later, up to 24) to be installed. Follow the instructions from the [Nextflow installation guidance](https://www.nextflow.io/docs/latest/install.html#install-page) to check the requirements and perform a step-by-step installation.
-
-### Step 2: Install Singularity 
-You can install Singularity via the [Singularity Quickstart Guide](https://docs.sylabs.io/guides/3.9/user-guide/quick_start.html) or
-[Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html):
-```bash
-# Create a new conda environment for Singularity
-conda create --name sing_env -c conda-forge -c bioconda singularity=3.8 
-# Activate environment
-conda activate sing_env
-# Check whether Singularity has been successfully installed
-singularity --version
-# Also, make sure you can run an example container
-singularity run library://sylabsed/examples/lolcow
-```
-or 
-```bash
-# Install SingularityCE from official .deb package
-# This is the cleanest method, easiest, fastest, and fully supported.
-
-# Download installer
-wget https://github.com/sylabs/singularity/releases/download/v4.1.2/singularity-ce_4.1.2-jammy_amd64.deb
-
-# Install it
-sudo apt install ./singularity-ce_4.1.2-jammy_amd64.deb
-
-# Test it
-singularity --version
-
-# Expected:
-# singularity-ce version 4.1.2
-```
-
-### step 3: Install dependent software for WESscDRS
-GEcsDRS needs some extra software to run:
-* scDRS
+WESscDRS needs some extra software to run:
+### step 1: Install scDRS
 Nextflow will install it. If there is a problem, check [their page](https://pypi.org/project/scdrs/).
-* bcftools
-You can install it from [here](https://samtools.github.io/bcftools/howtos/install.html).
-* MAGMA
+### step 2: Install bcftools
+Nextflow will install it. If there is a problem, check [here](https://samtools.github.io/bcftools/howtos/install.html).
+### step 3: Install MAGMA
+This installation must be done manually to choose the right operating system and desired genome reference.
 Select and install the correct version for your operating system from [here](https://cncr.nl/research/magma/).
 
 ## Downloads
-### Downloading WESscDRS
-Use the following command to download or update the pipeline:
+### Clone WESscDRS 
+All the codes and needed files for the sample file will be downloaded in this step.
+
+1. Make a folder where you want to keep data and files for the WESscDRS project.
+For example, make a folder named WESscDRS in this place: /home/seirana/Desktop.
 ```bash
-nextflow run seirana/WESscDRS -profile singularity
-nextflow pull seirana/WESscDRS
+cd /home/seirana/Desktop
+mkdir -p WESscDRS
 ```
-You will find the pipeline code stored in ${HOME}/.nextflow/assets/seirana/WESscDRS.
-
-### Downloading input data for GEsxDRS
-
-## Example workflows
-* Running WESscDRS	
-  
+2. Clone the GitHub repo into that folder
+```bash
+cd /home/seirana/Desktop/WESscDRS
+git clone https://github.com/seirana/WESscDRS.git
+```
+#.............................................................................
+3. If you get an error like “destination path 'WESscDRS' already exists”.
+```bash
+cd /home/seirana/Desktop/WESscDRS
+git pull --rebase origin main
+```
+ 
 ### Running WESscDRS	
-In your first run, to download required databases, you can add the --updatemetaphlan flag; in subsequent runs, you can skip the update flag (remove line 6 from the following code; --updatemetaphlan \).
 ```bash
 nextflow run ikmb/WESscDRS \
     -profile custom \
