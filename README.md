@@ -58,8 +58,8 @@ Nextflow will install it. If there is a problem, check [their page](https://pypi
 ### step 2: Install bcftools
 Nextflow will install it. If there is a problem, check [here](https://samtools.github.io/bcftools/howtos/install.html).
 ### step 3: Install MAGMA
-This installation must be done manually to choose the right operating system and desired genome reference.
-Select and install the correct version for your operating system from [here](https://cncr.nl/research/magma/).
+This installation must be done manually.
+Select and install the correct version for your operating system and desired genome reference from [here](https://cncr.nl/research/magma/).
 
 ## Downloads
 ### Clone WESscDRS 
