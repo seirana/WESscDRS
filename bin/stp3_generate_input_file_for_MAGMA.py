@@ -19,23 +19,25 @@ import read_write as rw
 import pandas as pd
 
 
-file = './scDRS/output/variants_with_rsID_PSC_WES_SAIGE.vcf'
-split = ('\t')
-with open(file) as f:
-    lines = f.readlines()
+vcf_file = './scDRS/output/variants_with_rsID_PSC_WES_SAIGE.vcf'
 
-clmns = lines[27]
-lines = lines[28:]
-clmns = list(clmns.split(split))
-l = len(clmns)
-if clmns[l-1].endswith('\n'):
-    s = clmns[l-1]
-    sl = len(s)
-    clmns[l-1] = s[0:sl-1]
+header_line_idx = None
+header_cols = None
 
-y = pd.DataFrame([x.strip().split(split) for x in lines], columns=clmns)
-vcf = y.copy()
-vcf.rename(columns={'#CHROM': 'CHROM'}, inplace=True)
+with open(vcf_file, "rt") as f:
+    for i, line in enumerate(f):
+        if line.startswith("#CHROM"):
+            header_line_idx = i
+            header_cols = line.strip().lstrip("#").split("\t")
+            break
+
+vcf = pd.read_csv(
+    vcf_file,
+    sep="\t",
+    comment="#",   # skips all lines starting with '#'
+    header=None,   # no header line inside the data section
+    names=header_cols
+)
 
 PSC_WES_for_MAGMA = vcf.loc[:, ['ID', 'CHROM', 'POS']].copy()
 PSC_WES_for_MAGMA.columns = ['Variant name', 'CHROM', 'GENPOS']
