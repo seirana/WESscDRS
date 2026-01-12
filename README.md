@@ -2,7 +2,7 @@
 WES-scDRS is designed to link single-variant analysis scores with polygenic disease risk at single-cell RNA sequencing. It identifies cells with excess expression of disease-associated genes identified by Whole Exome Sequencing (WES).  
 
 In the [Quick Start](#quick-start) section, you can follow the instructions to install the requirements and run a sample.
-To learn more about the functions, refer to the flowcharts in the [Flowcharts](https://github.com/ikmb/WES-scDRS/tree/main/Flowcharts). Additionally, there, you can find detailed instructions on the data type and formats required as input for the WES-scDRS function.
+To learn more about the functions, refer to the flowcharts in the [Flowcharts](https://github.com/seirana/WES-scDRS/tree/main/Flowcharts). Additionally, there, you can find detailed instructions on the data type and formats required as input for the WES-scDRS function.
  
 # Table of contents
 - [Pipeline structure](#pipeline-structure)
@@ -14,7 +14,7 @@ To learn more about the functions, refer to the flowcharts in the [Flowcharts](h
 	- [Running WES-scDRS](#running-WES-scDRS)
   
 # Pipeline Structure
-![Image Alt Text](https://github.com/ikmb/WES-scDRS/blob/main/Flowcharts/Pipeline%20Structure.png)
+![Image Alt Text](https://github.com/seirana/WES-scDRS/blob/main/Flowcharts/Pipeline%20Structure.png)
 
 # Quick Start
 ## Prerequisites and Configuration
@@ -36,7 +36,7 @@ All the codes and needed files for the sample file will be downloaded in this st
 Clone data and files for the WES-scDRS project if missing,
 ```bash
 cd "$HOME"
-git clone https://github.com/ikmb/WES-scDRS.git
+git clone https://github.com/seirana/WES-scDRS.git
 cd WES-scDRS
 wget -O "$HOME/WES-scDRS/data/HumanLiverHealthyscRNAseqData.zip" \
 "https://github.com/seirana/WES-scDRS/blob/main/data/HumanLiverHealthyscRNAseqData.zip?raw=1"
