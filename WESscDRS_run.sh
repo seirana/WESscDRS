@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -7,14 +8,11 @@ echo
 # Absolute directory of this script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# If this script lives in <repo>/scripts/, repo root is one level up.
-# If it lives directly in <repo>/, repo root is SCRIPT_DIR.
-REPO_DIR="$(cd "$SCRIPT_DIR" && pwd)"
+# Detect repo root
+REPO_DIR=""
 if [[ -d "$SCRIPT_DIR/bin" ]]; then
-  # script is probably at repo root (repo/bin exists)
   REPO_DIR="$SCRIPT_DIR"
 elif [[ -d "$SCRIPT_DIR/../bin" ]]; then
-  # script is probably inside scripts/ (repo/bin exists one level up)
   REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 else
   echo "ERROR: Could not locate repo root (bin/ not found)."
@@ -23,8 +21,6 @@ else
 fi
 
 BIN_DIR="$REPO_DIR/bin"
-
-# Standard project dirs (adjust/add if you use more)
 OUT_DIR="$REPO_DIR/output"
 DATA_DIR="$REPO_DIR/data"
 MAGMA_DIR="$REPO_DIR/magma"
@@ -32,18 +28,73 @@ LOG_DIR="$OUT_DIR/logs"
 
 mkdir -p "$OUT_DIR" "$LOG_DIR"
 
-# Export for ALL downstream bash + python steps (so no /home vs /work hardcoding)
+# Export for downstream scripts
 export REPO_DIR BIN_DIR OUT_DIR DATA_DIR MAGMA_DIR
 
-# Optional: helpful debug print (keeps invisible chars visible)
-printf 'REPO_DIR=[%q]\nBIN_DIR=[%q]\nOUT_DIR=[%q]\nDATA_DIR=[%q]\nMAGMA_DIR=[%q]\n' \
-  "$REPO_DIR" "$BIN_DIR" "$OUT_DIR" "$DATA_DIR" "$MAGMA_DIR"
+# Prefer repo-local venv python if present (matches setup_dependencies.sh)
+PYTHON="python3"
+if [[ -x "$REPO_DIR/pythonENV/bin/python" ]]; then
+  PYTHON="$REPO_DIR/pythonENV/bin/python"
+elif [[ -f "$REPO_DIR/pythonENV/bin/activate" ]]; then
+  # shellcheck disable=SC1091
+  source "$REPO_DIR/pythonENV/bin/activate"
+  PYTHON="python3"
+fi
+export PYTHON
+
+# Ensure repo-local tools are used (matches setup_dependencies.sh)
+export PATH="$REPO_DIR/magma:$REPO_DIR/bcftools:$REPO_DIR/htslib:$PATH"
+hash -r
+
+need_cmd () {
+  command -v "$1" >/dev/null 2>&1 || {
+    echo "ERROR: Required tool '$1' not found in PATH."
+    echo "PATH=$PATH"
+    exit 1
+  }
+}
+
+# Hard requirements (since setup builds/provides these)
+need_cmd "$PYTHON"
+need_cmd bcftools
+need_cmd bgzip
+need_cmd tabix
+need_cmd magma
+
+# -----------------------------
+# Preflight: verify critical inputs (prevents PersonA-type failures)
+# -----------------------------
+echo ">>> Preflight: checking critical input files"
+
+DBSNP_VCF="$REPO_DIR/vcf/00-All.vcf.gz"
+DBSNP_TBI="$REPO_DIR/vcf/00-All.vcf.gz.tbi"
+
+test -s "$DBSNP_VCF" || { echo "ERROR: Missing dbSNP VCF: $DBSNP_VCF"; exit 1; }
+
+# BGZF integrity check (stronger / more relevant than gzip -t here)
+bgzip -t "$DBSNP_VCF" || { echo "ERROR: dbSNP VCF corrupted/truncated (BGZF test failed): $DBSNP_VCF"; exit 1; }
+
+# Ensure bcftools can parse header (detects subtle corruption)
+bcftools view -h "$DBSNP_VCF" >/dev/null || { echo "ERROR: bcftools cannot read dbSNP VCF: $DBSNP_VCF"; exit 1; }
+
+# Setup script rebuilds index; here we enforce presence (or rebuild if missing)
+if [[ ! -s "$DBSNP_TBI" ]]; then
+  echo ">>> dbSNP index missing, creating: $DBSNP_TBI"
+  tabix -p vcf "$DBSNP_VCF" || { echo "ERROR: Failed to index dbSNP VCF"; exit 1; }
+fi
+
+echo ">>> Preflight OK"
+echo
+
+# Helpful debug print
+printf 'REPO_DIR=[%q]\nBIN_DIR=[%q]\nOUT_DIR=[%q]\nDATA_DIR=[%q]\nMAGMA_DIR=[%q]\nPYTHON=[%q]\n' \
+  "$REPO_DIR" "$BIN_DIR" "$OUT_DIR" "$DATA_DIR" "$MAGMA_DIR" "$PYTHON"
 echo
 
 run_py () {
   local script="$1"
   echo ">>> $script"
-  python3 "$BIN_DIR/$script" 2>&1 | tee "$LOG_DIR/${script%.py}.log"
+  "$PYTHON" "$BIN_DIR/$script" 2>&1 | tee "$LOG_DIR/${script%.py}.log"
   echo
 }
 
